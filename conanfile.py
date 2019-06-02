@@ -36,16 +36,14 @@ class LibccdConan(ConanFile):
                               'include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)\n' +
                               'conan_basic_setup()\n')
 
-    def _libccd_cmake_definitions(self, package_folder):
+    def _libccd_cmake_definitions(self):
         cmake_defs = {}
         cmake_defs["ENABLE_DOUBLE_PRECISION"] = 'ON' if self.options.double_precision else 'OFF'
         cmake_defs["BUILD_SHARED_LIBS"] = 'ON' if self.options.shared else 'OFF'
         cmake_defs["BUILD_TESTING"] = 'ON' if self.options.build_testing else 'OFF'
-        if package_folder:
-            cmake_defs["CMAKE_INSTALL_PREFIX"] = package_folder
         return cmake_defs
 
-    def _configure_cmake(self, package_folder=None):
+    def _configure_cmake(self):
         WARNING_FLAGS = '-Wall -Wextra -Wnon-virtual-dtor -pedantic -Wshadow'
         if self.settings.build_type == "Debug":
             # debug flags
@@ -64,10 +62,10 @@ class LibccdConan(ConanFile):
 
         # put definitions here so that they are re-used in cmake between
         # build() and package()
-        cmake.definitions["CONAN_C_FLAGS"] += ' ' + cFlags
+        cmake.definitions["CONAN_C_FLAGS"] += ' ' + cFlags + ' ' + '-fPIC'
         cmake.definitions["CONAN_CXX_FLAGS"] += ' ' + cxxFlags
         cmake.definitions["CONAN_SHARED_LINKER_FLAGS"] += ' ' + linkFlags
-        cmake.configure(defs=self._libccd_cmake_definitions(package_folder), source_folder=os.path.join(self.build_folder, "libccd"))
+        cmake.configure(defs=self._libccd_cmake_definitions(), source_folder=os.path.join(self.build_folder, "libccd"))
         return cmake
 
     def build(self):
@@ -77,7 +75,7 @@ class LibccdConan(ConanFile):
             cmake.test()
 
     def package(self):
-        cmake = self._configure_cmake(package_folder=self.package_folder)
+        cmake = self._configure_cmake()
         cmake.install()
 
     def package_info(self):
