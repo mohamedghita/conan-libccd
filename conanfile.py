@@ -62,10 +62,13 @@ class LibccdConan(ConanFile):
 
         # put definitions here so that they are re-used in cmake between
         # build() and package()
-        cmake.definitions["CONAN_C_FLAGS"] += ' ' + cFlags + ' ' + '-fPIC'
+        cmake.definitions["CONAN_C_FLAGS"] += ' ' + cFlags
         cmake.definitions["CONAN_CXX_FLAGS"] += ' ' + cxxFlags
         cmake.definitions["CONAN_SHARED_LINKER_FLAGS"] += ' ' + linkFlags
-        cmake.configure(defs=self._libccd_cmake_definitions(), source_folder=os.path.join(self.build_folder, "libccd"))
+        
+        cmake_defs = self._libccd_cmake_definitions()
+        cmake_defs["CMAKE_POSITION_INDEPENDENT_CODE"] = "ON"
+        cmake.configure(defs=cmake_defs, source_folder=os.path.join(self.build_folder, "libccd"))
         return cmake
 
     def build(self):
