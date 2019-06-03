@@ -23,7 +23,7 @@ class LibccdConan(ConanFile):
         "double_precision": True,
         "build_testing": False
     }
-    build_requires = "cmake_installer/[>=3.14.4]@conan/stable"
+    build_requires = "cmake_installer/[>=3.14.4]@conan/stable", "pkg-config_installer/0.29.2@bincrafters/stable"
     generators = "cmake"
 
     def source(self):
