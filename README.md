@@ -2,7 +2,7 @@
 libccd conan package for https://github.com/danfis/libccd
 
 # Bintray repository
-Find the package here https://bintray.com/radalytica/conan-radalytica/libccd
+Find the package here https://bintray.com/rd/conan-radalytica/libccd
 
 # Installation 
 1. [install conan.io](https://docs.conan.io/en/latest/installation.html) 
